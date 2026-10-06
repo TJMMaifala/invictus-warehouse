@@ -29,6 +29,19 @@ export const discountPercent = (p: Product) =>
 
 /* --------------------------------- DEMO mode ------------------------------ */
 // Used ONLY when Supabase env vars are missing. Built from the seed catalogue.
+function iphoneDemoImages(model: string): ProductImage[] {
+  const cleanModel = model.trim();
+  if (!cleanModel) return [];
+
+  const imageModel = cleanModel;
+
+  return [{
+    url: `/images/iphones/${imageModel.replace(/ /g, "%20")}.jpg`,
+    alt: `${cleanModel} product image`,
+    source: "own",
+  }];
+}
+
 function demoProducts(): Product[] {
   const now = new Date("2026-10-01T00:00:00Z").toISOString();
   return SEED_PRODUCTS.map((s, i): Product => {
@@ -42,7 +55,7 @@ function demoProducts(): Product[] {
     return {
       id: `demo-${slug}`, slug, name: s.name, category: s.category, brand: s.brand, model: s.model,
       colour: s.colour, condition: s.condition, priceCents: s.priceRand * 100, salePriceCents: null,
-      featured: !!s.featured, published: true, images: [], variants,
+      featured: !!s.featured, published: true, images: s.category === "iphones" ? iphoneDemoImages(s.model) : [], variants,
       description:
         s.category === "iphones"
           ? `${s.condition === "pre_owned" ? "Pre-owned" : "Brand new"} ${s.model}. Storage, colour and battery health are confirmed with you before purchase.`
