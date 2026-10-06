@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+/* ---------- Invictus design tokens ---------- */
+@theme inline {
+  --color-ink: #0b0b0c;
+  --color-paper: #ffffff;
+  --color-bone: #efecea;        /* warm off-white (reference background) */
+  --color-stone: #d9d5d1;       /* card plate grey */
+  --color-mist: #8a8784;        /* secondary text */
+  --color-silver: #b9bcc2;      /* subtle metallic accent */
+  --color-ok: #1f7a4d;
+  --color-warn: #b45309;
+  --color-bad: #b42318;
+
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-head), "Arial Black", "Helvetica Neue", Arial, sans-serif;
+
+  --radius-card: 18px;
+  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.04), 0 8px 24px -12px rgb(0 0 0 / 0.12);
+}
+
+:root { color-scheme: light; }
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--color-bone);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+@layer base {
+  h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.02em; }
+  :focus-visible { outline: 2px solid var(--color-ink); outline-offset: 3px; border-radius: 4px; }
+  button { cursor: pointer; }
+  button:disabled { cursor: not-allowed; }
+}
+
+@layer components {
+  .container-x { @apply mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-10; }
+  .display-xl { @apply font-black uppercase leading-[0.92] tracking-tight text-[clamp(3rem,9vw,8rem)]; }
+  .display-lg { @apply font-extrabold uppercase leading-[0.98] tracking-tight text-[clamp(2rem,5vw,4rem)]; }
+  .eyebrow { @apply text-[11px] font-semibold uppercase tracking-[0.22em] text-mist; }
+
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-[6px] border px-6 py-3.5 text-[12px] font-semibold uppercase tracking-[0.14em] transition-colors duration-200 disabled:opacity-40; }
+  .btn-primary { @apply inline-flex items-center justify-center gap-2 rounded-[6px] border px-6 py-3.5 text-[12px] font-semibold uppercase tracking-[0.14em] transition-colors duration-200 disabled:opacity-40 border-ink bg-ink text-paper hover:bg-neutral-800; }
+  .btn-secondary { @apply inline-flex items-center justify-center gap-2 rounded-[6px] border px-6 py-3.5 text-[12px] font-semibold uppercase tracking-[0.14em] transition-colors duration-200 disabled:opacity-40 border-ink bg-transparent text-ink hover:bg-ink hover:text-paper; }
+  .btn-ghost { @apply inline-flex items-center justify-center gap-2 rounded-[6px] border px-6 py-3.5 text-[12px] font-semibold uppercase tracking-[0.14em] transition-colors duration-200 disabled:opacity-40 border-transparent bg-transparent text-ink underline-offset-4 hover:underline; }
+
+  .input { @apply w-full rounded-[6px] border border-ink/25 bg-paper px-4 py-3 text-[15px] outline-none transition-colors placeholder:text-mist focus:border-ink; }
+  .label { @apply mb-1.5 block text-[12px] font-semibold uppercase tracking-[0.12em]; }
+  .card { @apply rounded-[var(--radius-card)] bg-stone/60; }
+  .chip { @apply inline-flex items-center rounded-full border border-ink/20 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
