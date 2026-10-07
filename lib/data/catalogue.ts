@@ -29,19 +29,6 @@ export const discountPercent = (p: Product) =>
 
 /* --------------------------------- DEMO mode ------------------------------ */
 // Used ONLY when Supabase env vars are missing. Built from the seed catalogue.
-function iphoneDemoImages(model: string): ProductImage[] {
-  const cleanModel = model.trim();
-  if (!cleanModel) return [];
-
-  const imageModel = cleanModel;
-
-  return [{
-    url: `/images/iphones/${imageModel.replace(/ /g, "%20")}.jpg`,
-    alt: `${cleanModel} product image`,
-    source: "own",
-  }];
-}
-
 function demoProducts(): Product[] {
   const now = new Date("2026-10-01T00:00:00Z").toISOString();
   return SEED_PRODUCTS.map((s, i): Product => {
@@ -55,7 +42,9 @@ function demoProducts(): Product[] {
     return {
       id: `demo-${slug}`, slug, name: s.name, category: s.category, brand: s.brand, model: s.model,
       colour: s.colour, condition: s.condition, priceCents: s.priceRand * 100, salePriceCents: null,
-      featured: !!s.featured, published: true, images: s.category === "iphones" ? iphoneDemoImages(s.model) : [], variants,
+      featured: !!s.featured, published: true,
+      images: s.imageUrl ? [{ url: s.imageUrl, alt: `${s.name} product image`, source: "own" }] : [],
+      variants,
       description:
         s.category === "iphones"
           ? `${s.condition === "pre_owned" ? "Pre-owned" : "Brand new"} ${s.model}. Storage, colour and battery health are confirmed with you before purchase.`
@@ -82,6 +71,10 @@ function mapRow(r: ProductRow): Product {
   const images: ProductImage[] = [...r.product_images]
     .sort((a, b) => a.sort_order - b.sort_order)
     .map((i) => ({ url: i.url, alt: i.alt ?? r.name, source: i.source }));
+  const seedProduct = SEED_PRODUCTS.find((p) => seedSlug(p) === r.slug);
+  if (images.length === 0 && seedProduct?.imageUrl) {
+    images.push({ url: seedProduct.imageUrl, alt: `${r.name} product image`, source: "own" });
+  }
   const variants: Variant[] = r.product_variants.map((v) => {
     const inv = Array.isArray(v.inventory) ? v.inventory[0] : v.inventory;
     return { id: v.id, size: v.size ?? undefined, colour: v.colour ?? undefined,
