@@ -18,6 +18,7 @@ export interface SeedProduct {
   brand: string;
   model: string;
   colour?: string;
+  imageUrl?: string;
   condition: "new" | "pre_owned";
   priceRand: number;
   /** true when the source listing had no price and the category default was used */
@@ -27,6 +28,17 @@ export interface SeedProduct {
 
 export const SNEAKER_SIZES = ["UK 6", "UK 7", "UK 8", "UK 9", "UK 10", "UK 11", "UK 12"];
 export const CLOTHING_SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
+const CLOTHING_IMAGE_NAMES = new Set([
+  "Nike Air Oversized Crew",
+  "Nike Club Fleece Hoodie",
+  "Nike Dri-FIT Training Tee",
+  "Nike Run Division Zip Hoodie",
+  "Nike Sportswear French Terry Joggers",
+  "Nike Tech Fleece Full-Zip Jacket",
+  "Nike Tech Fleece Long Sleeve Set Blue",
+  "Nike Tech Fleece Long Sleeve Set Grey",
+  "Nike x Nocta Reversible Puffer Jacket",
+]);
 
 const sneaker = (
   name: string,
@@ -41,6 +53,27 @@ const sneaker = (
   colour,
   condition: "new",
   priceRand: 950,
+  ...extra,
+});
+
+const clothingItem = (
+  name: string,
+  model: string,
+  brand: string,
+  colour: string,
+  priceRand: number,
+  extra: Partial<SeedProduct> = {},
+): SeedProduct => ({
+  name,
+  category: "clothing",
+  brand,
+  model,
+  colour,
+  ...(CLOTHING_IMAGE_NAMES.has(name)
+    ? { imageUrl: `/images/clothing/${encodeURIComponent(`${name}.jpg`)}` }
+    : {}),
+  condition: "new",
+  priceRand,
   ...extra,
 });
 
@@ -91,6 +124,7 @@ export const SEED_PRODUCTS: SeedProduct[] = [
       category: "iphones",
       brand: "Apple",
       model: m,
+      imageUrl: `/images/iphones/${encodeURIComponent(`${m}.jpg`)}`,
       condition: "pre_owned",
       priceRand: p,
       featured: m === "iPhone 13",
@@ -127,6 +161,7 @@ export const SEED_PRODUCTS: SeedProduct[] = [
       category: "iphones",
       brand: "Apple",
       model: m,
+      imageUrl: `/images/iphones/${encodeURIComponent(`${m}.jpg`)}`,
       condition: "new",
       priceRand: p,
       featured: m === "iPhone 15 Pro",
@@ -134,21 +169,16 @@ export const SEED_PRODUCTS: SeedProduct[] = [
   ),
 
   // ---- Clothing ----
-  {
-    name: "Nike Tech Fleece Long Sleeve Set Grey",
-    category: "clothing", brand: "Nike", model: "Tech Fleece", colour: "Grey",
-    condition: "new", priceRand: 1600, featured: true,
-  },
-  {
-    name: "Nike x Nocta Reversible Puffer Jacket",
-    category: "clothing", brand: "Nike x Nocta", model: "Reversible Puffer Jacket",
-    condition: "new", priceRand: 1600, featured: true,
-  },
-  {
-    name: "Nike Tech Fleece Long Sleeve Set Blue",
-    category: "clothing", brand: "Nike", model: "Tech Fleece", colour: "Blue",
-    condition: "new", priceRand: 1600,
-  },
+  clothingItem("Nike Tech Fleece Long Sleeve Set Grey", "Tech Fleece", "Nike", "Grey", 1600, { featured: true }),
+  clothingItem("Nike x Nocta Reversible Puffer Jacket", "Reversible Puffer Jacket", "Nike x Nocta", "Black", 1600, { featured: true }),
+  clothingItem("Nike Tech Fleece Long Sleeve Set Blue", "Tech Fleece", "Nike", "Blue", 1600),
+  clothingItem("Nike Club Fleece Hoodie", "Club Fleece", "Nike", "Charcoal", 1200),
+  clothingItem("Jordan Essentials Track Jacket", "Essentials Track Jacket", "Jordan", "Black", 1800),
+  clothingItem("Nike Dri-FIT Training Tee", "Dri-FIT Tee", "Nike", "White", 650),
+  clothingItem("Nike Sportswear French Terry Joggers", "French Terry Joggers", "Nike", "Stone", 1100),
+  clothingItem("Nike Air Oversized Crew", "Air Oversized Crew", "Nike", "Cream", 900),
+  clothingItem("Nike Run Division Zip Hoodie", "Run Division Hoodie", "Nike", "Midnight", 1450),
+  clothingItem("Nike Tech Fleece Full-Zip Jacket", "Tech Fleece", "Nike", "Forest Green", 1700),
 ];
 
 export function slugify(input: string): string {

@@ -26,6 +26,13 @@ SEED_PRODUCTS.forEach((p, i) => {
     `insert into products (slug,name,description,category_id,brand,model,colour,condition,price_cents,featured,published) ` +
     `select ${q(slug)},${q(p.name)},${q(desc)},id,${q(p.brand)},${q(p.model)},${p.colour ? q(p.colour) : "null"},${q(p.condition)},${p.priceRand * 100},${!!p.featured},true from categories where slug=${q(p.category)} on conflict (slug) do nothing;`,
   );
+  if (p.imageUrl) {
+    out.push(
+      `insert into product_images (product_id,url,alt,source,sort_order) ` +
+      `select id,${q(p.imageUrl)},${q(`${p.name} product image`)},'own',0 from products ` +
+      `where slug=${q(slug)} and not exists (select 1 from product_images where product_id=products.id and url=${q(p.imageUrl)});`,
+    );
+  }
   const sizes = p.category === "sneakers" ? SNEAKER_SIZES : p.category === "clothing" ? CLOTHING_SIZES : [null];
   sizes.forEach((size, si) => {
     const qty = p.category === "iphones" ? (i % 3 === 0 ? 0 : 1 + (i % 2)) : placeholderStock(i, si);

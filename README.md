@@ -39,7 +39,7 @@ Then open `/admin`. Customers can never reach admin features (server checks + RL
 Set `PAYSTACK_SECRET_KEY` and `NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY` and point the Paystack webhook to `/api/payments/webhook`. Start with test keys. No card data is stored. **PayFast is a documented stub and not functional yet.**
 
 ## Product images
-Seed products use clearly marked **reference** images, not Invictus photography. Upload your own in Admin → Products; mark borrowed images as "Reference" so they are labelled.
+Matching seed-product images are served from `public/images/iphones` and `public/images/clothing`; products without a matching image show a branded placeholder. Seed SQL links those images to products, and the storefront also uses the matching image for existing seeded products without a database image. Manage product images in Admin → Products; mark borrowed images as "Reference" so they are labelled.
 
 ## Deployment (Vercel)
 Import the repo, add the environment variables from `.env.example`, set `NEXT_PUBLIC_SITE_URL` to the live domain, deploy.
